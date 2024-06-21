@@ -1,4 +1,6 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { EntityNotFoundError } from 'typeorm';
 
 import { BrandController } from '~bikeshop/brand.controller';
 import { Brand } from '~bikeshop/brand.entity';
@@ -18,6 +20,7 @@ describe('BrandController', () => {
           useValue: {
             create: jest.fn(),
             findAll: jest.fn(),
+            findOne: jest.fn(),
           },
         },
       ],
@@ -48,5 +51,21 @@ describe('BrandController', () => {
     mockedService.findAll.mockResolvedValue(brands);
 
     await expect(controller.findAll()).resolves.toStrictEqual(brands);
+  });
+
+  it('should find a brand by id', async () => {
+    const brand: Brand = { id: 1n, name: 'Brand' };
+
+    mockedService.findOne.mockResolvedValue(brand);
+
+    await expect(controller.findOne(1n)).resolves.toStrictEqual(brand);
+  });
+
+  it('should throw an error if brand not found', async () => {
+    mockedService.findOne.mockRejectedValue(
+      new EntityNotFoundError(Brand, { id: 404n }),
+    );
+
+    await expect(controller.findOne(404n)).rejects.toThrow(NotFoundException);
   });
 });

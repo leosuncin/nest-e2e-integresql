@@ -21,4 +21,8 @@ export class BrandService {
   findAll() {
     return this.brandRepository.find();
   }
+
+  findOne(id: bigint) {
+    return this.brandRepository.findOneByOrFail({ id });
+  }
 }
