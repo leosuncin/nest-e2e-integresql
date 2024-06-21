@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from '~/app.controller';
 import { AppService } from '~/app.service';
 import typeORMconfig from '~/config/typeorm';
+import { BikeshopModule } from '~bikeshop/bikeshop.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import typeORMconfig from '~/config/typeorm';
       useFactory: (configService: ConfigService) =>
         configService.getOrThrow('typeorm'),
     }),
+    BikeshopModule,
   ],
   controllers: [AppController],
   providers: [AppService],
