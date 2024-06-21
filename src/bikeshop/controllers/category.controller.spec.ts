@@ -5,6 +5,7 @@ import { CategoryController } from '~bikeshop/category.controller';
 import { Category } from '~bikeshop/category.entity';
 import { CategoryService } from '~bikeshop/category.service';
 import { CreateCategory } from '~bikeshop/create-category.dto';
+import { UpdateCategory } from '~bikeshop/update-category.dto';
 
 describe('CategoryController', () => {
   let controller: CategoryController;
@@ -20,6 +21,7 @@ describe('CategoryController', () => {
             create: jest.fn(),
             findAll: jest.fn(),
             findOne: jest.fn(),
+            update: jest.fn(),
           },
         },
       ],
@@ -66,5 +68,17 @@ describe('CategoryController', () => {
     );
 
     await expect(controller.findOne(404n)).rejects.toThrow();
+  });
+
+  it('should update a category', async () => {
+    const categoryChanges: UpdateCategory = { name: 'New Category' };
+    const category: Category = { id: 1n, name: 'Category' };
+    const updatedCategory: Category = { id: 1n, name: 'New Category' };
+
+    mockedService.update.mockResolvedValue(updatedCategory);
+
+    await expect(
+      controller.update(category, categoryChanges),
+    ).resolves.toStrictEqual(updatedCategory);
   });
 });

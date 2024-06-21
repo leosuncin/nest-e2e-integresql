@@ -4,6 +4,7 @@ import type { Repository } from 'typeorm';
 
 import { Category } from '~bikeshop/category.entity';
 import { CreateCategory } from '~bikeshop/create-category.dto';
+import { UpdateCategory } from '~bikeshop/update-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -24,5 +25,11 @@ export class CategoryService {
 
   findOne(id: bigint) {
     return this.categoryRepository.findOneByOrFail({ id });
+  }
+
+  update(category: Category, categoryChanges: UpdateCategory) {
+    this.categoryRepository.merge(category, categoryChanges);
+
+    return this.categoryRepository.save(category);
   }
 }

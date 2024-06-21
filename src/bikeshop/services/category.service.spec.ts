@@ -5,6 +5,7 @@ import { EntityNotFoundError, Repository } from 'typeorm';
 import { Category } from '~bikeshop/category.entity';
 import { CategoryService } from '~bikeshop/category.service';
 import { CreateCategory } from '~bikeshop/create-category.dto';
+import { UpdateCategory } from '~bikeshop/update-category.dto';
 
 describe('CategoryService', () => {
   let service: CategoryService;
@@ -21,6 +22,7 @@ describe('CategoryService', () => {
               save: jest.fn(),
               find: jest.fn(),
               findOneByOrFail: jest.fn(),
+              merge: Object.assign,
             };
           },
         },
@@ -70,5 +72,17 @@ describe('CategoryService', () => {
     );
 
     await expect(service.findOne(404n)).rejects.toThrow();
+  });
+
+  it('should update a category', async () => {
+    const categoryChanges: UpdateCategory = { name: 'Updated Category' };
+    const category: Category = { id: 1n, name: 'Category' };
+    const updatedCategory: Category = { id: 1n, name: 'Updated Category' };
+
+    mockedRepository.save.mockResolvedValue(updatedCategory);
+
+    await expect(
+      service.update(category, categoryChanges),
+    ).resolves.toStrictEqual(updatedCategory);
   });
 });
