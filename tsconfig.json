@@ -21,7 +21,8 @@
         "src/bikeshop/dto/*",
         "src/bikeshop/services/*",
         "src/bikeshop/controllers/*"
-      ]
+      ],
+      "~common/*": ["src/common/*", "src/common/pipes/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

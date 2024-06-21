@@ -4,7 +4,6 @@ import {
   Get,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Post,
   ValidationPipe,
 } from '@nestjs/common';
@@ -12,6 +11,7 @@ import { EntityNotFoundError } from 'typeorm';
 
 import { BrandService } from '~bikeshop/brand.service';
 import { CreateBrand } from '~bikeshop/create-brand.dto';
+import { ParseBigIntPipe } from '~common/parse-big-int.pipe';
 
 @Controller('brands')
 export class BrandController {
@@ -28,7 +28,7 @@ export class BrandController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: bigint) {
+  async findOne(@Param('id', ParseBigIntPipe) id: bigint) {
     try {
       return await this.brandService.findOne(id);
     } catch (error) {
