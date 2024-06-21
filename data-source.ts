@@ -2,6 +2,7 @@ import 'dotenv/config';
 import 'tsconfig-paths/register';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
+import { CreateBrandsTable } from '~bikeshop/1718954984063-create-brands-table';
 import { Brand } from '~bikeshop/brand.entity';
 
 const options = {
@@ -11,6 +12,7 @@ const options = {
   database: process.env.POSTGRES_DB,
   synchronize: false,
   entities: [Brand],
+  migrations: [CreateBrandsTable],
 } satisfies DataSourceOptions;
 
 export default new DataSource(options);

@@ -14,7 +14,11 @@
     "baseUrl": "./",
     "paths": {
       "~/*": ["src/*"],
-      "~bikeshop/*": ["src/bikeshop/*", "src/bikeshop/entities/*"],
+      "~bikeshop/*": [
+        "src/bikeshop/*",
+        "src/bikeshop/entities/*",
+        "src/bikeshop/migrations/*"
+      ]
     },
     "incremental": true,
     "skipLibCheck": true,
