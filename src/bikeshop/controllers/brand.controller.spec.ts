@@ -5,6 +5,7 @@ import { BrandController } from '~bikeshop/brand.controller';
 import { Brand } from '~bikeshop/brand.entity';
 import { BrandService } from '~bikeshop/brand.service';
 import { CreateBrand } from '~bikeshop/create-brand.dto';
+import { UpdateBrand } from '~bikeshop/update-brand.dto';
 
 describe('BrandController', () => {
   let controller: BrandController;
@@ -20,6 +21,7 @@ describe('BrandController', () => {
             create: jest.fn(),
             findAll: jest.fn(),
             findOne: jest.fn(),
+            update: jest.fn(),
           },
         },
       ],
@@ -66,5 +68,16 @@ describe('BrandController', () => {
     );
 
     await expect(controller.findOne(404n)).rejects.toThrow();
+  });
+
+  it('should update a brand', async () => {
+    const brandChanges: UpdateBrand = { name: 'New Brand' };
+    const updatedBrand: Brand = { id: 1n, name: 'New Brand' };
+
+    mockedService.update.mockResolvedValue(updatedBrand);
+
+    await expect(controller.update(1n, brandChanges)).resolves.toStrictEqual(
+      updatedBrand,
+    );
   });
 });

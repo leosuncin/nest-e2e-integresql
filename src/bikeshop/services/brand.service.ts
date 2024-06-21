@@ -4,6 +4,7 @@ import type { Repository } from 'typeorm';
 
 import { Brand } from '~bikeshop/brand.entity';
 import { CreateBrand } from '~bikeshop/create-brand.dto';
+import { UpdateBrand } from '~bikeshop/update-brand.dto';
 
 @Injectable()
 export class BrandService {
@@ -24,5 +25,13 @@ export class BrandService {
 
   findOne(id: bigint) {
     return this.brandRepository.findOneByOrFail({ id });
+  }
+
+  async update(id: bigint, brandChanges: UpdateBrand) {
+    const brand = await this.findOne(id);
+
+    this.brandRepository.merge(brand, brandChanges);
+
+    return this.brandRepository.save(brand);
   }
 }

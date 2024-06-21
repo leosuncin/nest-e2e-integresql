@@ -5,6 +5,7 @@ import { EntityNotFoundError, Repository } from 'typeorm';
 import { Brand } from '~bikeshop/brand.entity';
 import { BrandService } from '~bikeshop/brand.service';
 import { CreateBrand } from '~bikeshop/create-brand.dto';
+import { UpdateBrand } from '~bikeshop/update-brand.dto';
 
 describe('BrandService', () => {
   let service: BrandService;
@@ -21,6 +22,7 @@ describe('BrandService', () => {
               save: jest.fn(),
               find: jest.fn(),
               findOneByOrFail: jest.fn(),
+              merge: Object.assign,
             };
           },
         },
@@ -68,5 +70,18 @@ describe('BrandService', () => {
     );
 
     await expect(service.findOne(404n)).rejects.toThrow();
+  });
+
+  it('should update a brand', async () => {
+    const brandChanges: UpdateBrand = { name: 'Updated Brand' };
+    const brand: Brand = { id: 1n, name: 'Brand' };
+    const updatedBrand: Brand = { id: 1n, name: 'Updated Brand' };
+
+    mockedRepository.findOneByOrFail.mockResolvedValueOnce(brand);
+    mockedRepository.save.mockResolvedValue(updatedBrand);
+
+    await expect(service.update(1n, brandChanges)).resolves.toStrictEqual(
+      updatedBrand,
+    );
   });
 });

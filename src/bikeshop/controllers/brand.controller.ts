@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   UseFilters,
   ValidationPipe,
@@ -10,6 +11,7 @@ import {
 
 import { BrandService } from '~bikeshop/brand.service';
 import { CreateBrand } from '~bikeshop/create-brand.dto';
+import { UpdateBrand } from '~bikeshop/update-brand.dto';
 import { EntityNotFoundFilter } from '~common/entity-not-found.filter';
 import { ParseBigIntPipe } from '~common/parse-big-int.pipe';
 
@@ -31,5 +33,14 @@ export class BrandController {
   @UseFilters(EntityNotFoundFilter)
   async findOne(@Param('id', ParseBigIntPipe) id: bigint) {
     return this.brandService.findOne(id);
+  }
+
+  @Patch(':id')
+  @UseFilters(EntityNotFoundFilter)
+  update(
+    @Param('id', ParseBigIntPipe) id: bigint,
+    @Body(ValidationPipe) brandChanges: UpdateBrand,
+  ) {
+    return this.brandService.update(id, brandChanges);
   }
 }
