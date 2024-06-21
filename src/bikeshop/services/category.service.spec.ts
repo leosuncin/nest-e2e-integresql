@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 
 import { Category } from '~bikeshop/category.entity';
 import { CategoryService } from '~bikeshop/category.service';
@@ -20,6 +20,7 @@ describe('CategoryService', () => {
               create: jest.fn(),
               save: jest.fn(),
               find: jest.fn(),
+              findOneByOrFail: jest.fn(),
             };
           },
         },
@@ -53,5 +54,21 @@ describe('CategoryService', () => {
     mockedRepository.find.mockResolvedValue(categorys);
 
     await expect(service.findAll()).resolves.toStrictEqual(categorys);
+  });
+
+  it('should find a category by id', async () => {
+    const category: Category = { id: 1n, name: 'Category' };
+
+    mockedRepository.findOneByOrFail.mockResolvedValueOnce(category);
+
+    await expect(service.findOne(1n)).resolves.toStrictEqual(category);
+  });
+
+  it('should throw an error when category is not found', async () => {
+    mockedRepository.findOneByOrFail.mockRejectedValue(
+      new EntityNotFoundError(Category, { id: 404n }),
+    );
+
+    await expect(service.findOne(404n)).rejects.toThrow();
   });
 });

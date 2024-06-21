@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EntityNotFoundError } from 'typeorm';
 
 import { CategoryController } from '~bikeshop/category.controller';
 import { Category } from '~bikeshop/category.entity';
@@ -18,6 +19,7 @@ describe('CategoryController', () => {
           useValue: {
             create: jest.fn(),
             findAll: jest.fn(),
+            findOne: jest.fn(),
           },
         },
       ],
@@ -48,5 +50,21 @@ describe('CategoryController', () => {
     mockedService.findAll.mockResolvedValue(categorys);
 
     await expect(controller.findAll()).resolves.toStrictEqual(categorys);
+  });
+
+  it('should find a category by id', async () => {
+    const category: Category = { id: 1n, name: 'Category' };
+
+    mockedService.findOne.mockResolvedValue(category);
+
+    await expect(controller.findOne(1n)).resolves.toStrictEqual(category);
+  });
+
+  it('should throw an error if category not found', async () => {
+    mockedService.findOne.mockRejectedValue(
+      new EntityNotFoundError(Category, { id: 404n }),
+    );
+
+    await expect(controller.findOne(404n)).rejects.toThrow();
   });
 });
