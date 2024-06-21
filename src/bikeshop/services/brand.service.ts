@@ -34,4 +34,10 @@ export class BrandService {
 
     return this.brandRepository.save(brand);
   }
+
+  async remove(id: bigint) {
+    const brand = await this.findOne(id);
+
+    return this.brandRepository.remove({ ...brand, id });
+  }
 }

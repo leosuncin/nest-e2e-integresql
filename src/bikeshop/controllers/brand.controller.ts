@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -42,5 +43,11 @@ export class BrandController {
     @Body(ValidationPipe) brandChanges: UpdateBrand,
   ) {
     return this.brandService.update(id, brandChanges);
+  }
+
+  @Delete(':id')
+  @UseFilters(EntityNotFoundFilter)
+  remove(@Param('id', ParseBigIntPipe) id: bigint) {
+    return this.brandService.remove(id);
   }
 }

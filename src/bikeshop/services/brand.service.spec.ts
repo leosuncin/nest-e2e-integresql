@@ -23,6 +23,7 @@ describe('BrandService', () => {
               find: jest.fn(),
               findOneByOrFail: jest.fn(),
               merge: Object.assign,
+              remove: jest.fn(),
             };
           },
         },
@@ -83,5 +84,14 @@ describe('BrandService', () => {
     await expect(service.update(1n, brandChanges)).resolves.toStrictEqual(
       updatedBrand,
     );
+  });
+
+  it('should remove a brand', async () => {
+    const brand: Brand = { id: 1n, name: 'Brand' };
+
+    mockedRepository.findOneByOrFail.mockResolvedValueOnce(brand);
+    mockedRepository.remove.mockResolvedValueOnce(brand);
+
+    await expect(service.remove(1n)).resolves.toStrictEqual(brand);
   });
 });

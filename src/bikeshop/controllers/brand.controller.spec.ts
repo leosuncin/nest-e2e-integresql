@@ -22,6 +22,7 @@ describe('BrandController', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
+            remove: jest.fn(),
           },
         },
       ],
@@ -79,5 +80,13 @@ describe('BrandController', () => {
     await expect(controller.update(1n, brandChanges)).resolves.toStrictEqual(
       updatedBrand,
     );
+  });
+
+  it('should remove a brand', async () => {
+    const brand: Brand = { id: 1n, name: 'Brand' };
+
+    mockedService.remove.mockResolvedValue(brand);
+
+    await expect(controller.remove(1n)).resolves.toStrictEqual(brand);
   });
 });
