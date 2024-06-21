@@ -22,7 +22,11 @@
         "src/bikeshop/services/*",
         "src/bikeshop/controllers/*"
       ],
-      "~common/*": ["src/common/*", "src/common/pipes/*"]
+      "~common/*": [
+        "src/common/*",
+        "src/common/pipes/*",
+        "src/common/filters/*"
+      ]
     },
     "incremental": true,
     "skipLibCheck": true,

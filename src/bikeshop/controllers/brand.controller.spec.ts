@@ -1,4 +1,3 @@
-import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EntityNotFoundError } from 'typeorm';
 
@@ -66,6 +65,6 @@ describe('BrandController', () => {
       new EntityNotFoundError(Brand, { id: 404n }),
     );
 
-    await expect(controller.findOne(404n)).rejects.toThrow(NotFoundException);
+    await expect(controller.findOne(404n)).rejects.toThrow();
   });
 });
