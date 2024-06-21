@@ -17,4 +17,8 @@ export class CategoryService {
 
     return this.categoryRepository.save(category);
   }
+
+  findAll() {
+    return this.categoryRepository.find();
+  }
 }

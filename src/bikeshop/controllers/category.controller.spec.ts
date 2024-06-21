@@ -17,6 +17,7 @@ describe('CategoryController', () => {
           provide: CategoryService,
           useValue: {
             create: jest.fn(),
+            findAll: jest.fn(),
           },
         },
       ],
@@ -39,5 +40,13 @@ describe('CategoryController', () => {
     await expect(controller.create(newCategory)).resolves.toStrictEqual(
       createdCategory,
     );
+  });
+
+  it('should find all categories', async () => {
+    const categorys: Category[] = [{ id: 1n, name: 'Category' }];
+
+    mockedService.findAll.mockResolvedValue(categorys);
+
+    await expect(controller.findAll()).resolves.toStrictEqual(categorys);
   });
 });

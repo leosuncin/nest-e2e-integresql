@@ -19,6 +19,7 @@ describe('CategoryService', () => {
             return {
               create: jest.fn(),
               save: jest.fn(),
+              find: jest.fn(),
             };
           },
         },
@@ -44,5 +45,13 @@ describe('CategoryService', () => {
     await expect(service.create(newCategory)).resolves.toStrictEqual(
       createdCategory,
     );
+  });
+
+  it('should find all categories', async () => {
+    const categorys: Category[] = [{ id: 1n, name: 'Category' }];
+
+    mockedRepository.find.mockResolvedValue(categorys);
+
+    await expect(service.findAll()).resolves.toStrictEqual(categorys);
   });
 });

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
 
 import { CategoryService } from '~bikeshop/category.service';
 import { CreateCategory } from '~bikeshop/create-category.dto';
@@ -10,5 +10,10 @@ export class CategoryController {
   @Post()
   create(@Body(ValidationPipe) newCategory: CreateCategory) {
     return this.categoryService.create(newCategory);
+  }
+
+  @Get()
+  findAll() {
+    return this.categoryService.findAll();
   }
 }
