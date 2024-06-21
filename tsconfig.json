@@ -14,7 +14,20 @@
     "baseUrl": "./",
     "paths": {
       "~/*": ["src/*"],
-      "~bikeshop/*": ["src/bikeshop/*"],
+      "~bikeshop/*": [
+        "src/bikeshop/*",
+        "src/bikeshop/entities/*",
+        "src/bikeshop/migrations/*",
+        "src/bikeshop/dto/*",
+        "src/bikeshop/services/*",
+        "src/bikeshop/controllers/*",
+        "src/bikeshop/pipes/*"
+      ],
+      "~common/*": [
+        "src/common/*",
+        "src/common/pipes/*",
+        "src/common/filters/*"
+      ]
     },
     "incremental": true,
     "skipLibCheck": true,
