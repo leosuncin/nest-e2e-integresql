@@ -1,4 +1,4 @@
-import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
 
 import { BrandService } from '~bikeshop/brand.service';
 import { CreateBrand } from '~bikeshop/create-brand.dto';
@@ -10,5 +10,10 @@ export class BrandController {
   @Post()
   create(@Body(ValidationPipe) newBrand: CreateBrand) {
     return this.brandService.create(newBrand);
+  }
+
+  @Get()
+  findAll() {
+    return this.brandService.findAll();
   }
 }

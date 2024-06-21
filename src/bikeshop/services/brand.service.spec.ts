@@ -19,6 +19,7 @@ describe('BrandService', () => {
             return {
               create: jest.fn(),
               save: jest.fn(),
+              find: jest.fn(),
             };
           },
         },
@@ -42,5 +43,13 @@ describe('BrandService', () => {
     mockedRepository.save.mockResolvedValue(createdBrand);
 
     await expect(service.create(newBrand)).resolves.toStrictEqual(createdBrand);
+  });
+
+  it('should find all brands', async () => {
+    const brands: Brand[] = [{ id: 1n, name: 'Brand' }];
+
+    mockedRepository.find.mockResolvedValue(brands);
+
+    await expect(service.findAll()).resolves.toStrictEqual(brands);
   });
 });

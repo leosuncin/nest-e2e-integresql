@@ -17,4 +17,8 @@ export class BrandService {
 
     return this.brandRepository.save(brand);
   }
+
+  findAll() {
+    return this.brandRepository.find();
+  }
 }

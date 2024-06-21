@@ -17,6 +17,7 @@ describe('BrandController', () => {
           provide: BrandService,
           useValue: {
             create: jest.fn(),
+            findAll: jest.fn(),
           },
         },
       ],
@@ -39,5 +40,13 @@ describe('BrandController', () => {
     await expect(controller.create(newBrand)).resolves.toStrictEqual(
       createdBrand,
     );
+  });
+
+  it('should find all brands', async () => {
+    const brands: Brand[] = [{ id: 1n, name: 'Brand' }];
+
+    mockedService.findAll.mockResolvedValue(brands);
+
+    await expect(controller.findAll()).resolves.toStrictEqual(brands);
   });
 });
