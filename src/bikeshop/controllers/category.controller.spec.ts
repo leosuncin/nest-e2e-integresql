@@ -22,6 +22,7 @@ describe('CategoryController', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
+            remove: jest.fn(),
           },
         },
       ],
@@ -80,5 +81,13 @@ describe('CategoryController', () => {
     await expect(
       controller.update(category, categoryChanges),
     ).resolves.toStrictEqual(updatedCategory);
+  });
+
+  it('should remove a category', async () => {
+    const category: Category = { id: 1n, name: 'Category' };
+
+    mockedService.remove.mockResolvedValue(category);
+
+    await expect(controller.remove(category)).resolves.toStrictEqual(category);
   });
 });

@@ -32,4 +32,8 @@ export class CategoryService {
 
     return this.categoryRepository.save(category);
   }
+
+  remove(category: Category) {
+    return this.categoryRepository.remove(category);
+  }
 }

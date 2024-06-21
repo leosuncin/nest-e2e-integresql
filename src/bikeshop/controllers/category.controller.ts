@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -44,5 +45,11 @@ export class CategoryController {
     @Body(ValidationPipe) categoryChanges: UpdateCategory,
   ) {
     return this.categoryService.update(category, categoryChanges);
+  }
+
+  @Delete(':id')
+  @UseFilters(EntityNotFoundFilter)
+  remove(@Param('id', ParseBigIntPipe, CastCategoryPipe) category: Category) {
+    return this.categoryService.remove(category);
   }
 }

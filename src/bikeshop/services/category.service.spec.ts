@@ -23,6 +23,7 @@ describe('CategoryService', () => {
               find: jest.fn(),
               findOneByOrFail: jest.fn(),
               merge: Object.assign,
+              remove: jest.fn(),
             };
           },
         },
@@ -84,5 +85,13 @@ describe('CategoryService', () => {
     await expect(
       service.update(category, categoryChanges),
     ).resolves.toStrictEqual(updatedCategory);
+  });
+
+  it('should remove a category', async () => {
+    const category: Category = { id: 1n, name: 'Category' };
+
+    mockedRepository.remove.mockResolvedValueOnce(category);
+
+    await expect(service.remove(category)).resolves.toStrictEqual(category);
   });
 });
