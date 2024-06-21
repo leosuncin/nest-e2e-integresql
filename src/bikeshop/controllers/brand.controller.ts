@@ -10,7 +10,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
+import { Brand } from '~bikeshop/brand.entity';
 import { BrandService } from '~bikeshop/brand.service';
+import { CastBrandPipe } from '~bikeshop/cast-brand.pipe';
 import { CreateBrand } from '~bikeshop/create-brand.dto';
 import { UpdateBrand } from '~bikeshop/update-brand.dto';
 import { EntityNotFoundFilter } from '~common/entity-not-found.filter';
@@ -39,15 +41,15 @@ export class BrandController {
   @Patch(':id')
   @UseFilters(EntityNotFoundFilter)
   update(
-    @Param('id', ParseBigIntPipe) id: bigint,
+    @Param('id', ParseBigIntPipe, CastBrandPipe) brand: Brand,
     @Body(ValidationPipe) brandChanges: UpdateBrand,
   ) {
-    return this.brandService.update(id, brandChanges);
+    return this.brandService.update(brand, brandChanges);
   }
 
   @Delete(':id')
   @UseFilters(EntityNotFoundFilter)
-  remove(@Param('id', ParseBigIntPipe) id: bigint) {
-    return this.brandService.remove(id);
+  remove(@Param('id', ParseBigIntPipe, CastBrandPipe) brand: Brand) {
+    return this.brandService.remove(brand);
   }
 }

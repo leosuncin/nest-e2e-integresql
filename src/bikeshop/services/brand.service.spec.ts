@@ -78,10 +78,9 @@ describe('BrandService', () => {
     const brand: Brand = { id: 1n, name: 'Brand' };
     const updatedBrand: Brand = { id: 1n, name: 'Updated Brand' };
 
-    mockedRepository.findOneByOrFail.mockResolvedValueOnce(brand);
     mockedRepository.save.mockResolvedValue(updatedBrand);
 
-    await expect(service.update(1n, brandChanges)).resolves.toStrictEqual(
+    await expect(service.update(brand, brandChanges)).resolves.toStrictEqual(
       updatedBrand,
     );
   });
@@ -89,9 +88,8 @@ describe('BrandService', () => {
   it('should remove a brand', async () => {
     const brand: Brand = { id: 1n, name: 'Brand' };
 
-    mockedRepository.findOneByOrFail.mockResolvedValueOnce(brand);
     mockedRepository.remove.mockResolvedValueOnce(brand);
 
-    await expect(service.remove(1n)).resolves.toStrictEqual(brand);
+    await expect(service.remove(brand)).resolves.toStrictEqual(brand);
   });
 });

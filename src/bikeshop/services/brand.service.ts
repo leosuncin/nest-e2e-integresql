@@ -27,17 +27,13 @@ export class BrandService {
     return this.brandRepository.findOneByOrFail({ id });
   }
 
-  async update(id: bigint, brandChanges: UpdateBrand) {
-    const brand = await this.findOne(id);
-
+  update(brand: Brand, brandChanges: UpdateBrand) {
     this.brandRepository.merge(brand, brandChanges);
 
     return this.brandRepository.save(brand);
   }
 
-  async remove(id: bigint) {
-    const brand = await this.findOne(id);
-
-    return this.brandRepository.remove({ ...brand, id });
+  remove(brand: Brand) {
+    return this.brandRepository.remove(brand);
   }
 }

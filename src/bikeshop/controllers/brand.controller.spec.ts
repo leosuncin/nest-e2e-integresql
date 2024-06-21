@@ -73,11 +73,12 @@ describe('BrandController', () => {
 
   it('should update a brand', async () => {
     const brandChanges: UpdateBrand = { name: 'New Brand' };
+    const brand: Brand = { id: 1n, name: 'Brand' };
     const updatedBrand: Brand = { id: 1n, name: 'New Brand' };
 
     mockedService.update.mockResolvedValue(updatedBrand);
 
-    await expect(controller.update(1n, brandChanges)).resolves.toStrictEqual(
+    await expect(controller.update(brand, brandChanges)).resolves.toStrictEqual(
       updatedBrand,
     );
   });
@@ -87,6 +88,6 @@ describe('BrandController', () => {
 
     mockedService.remove.mockResolvedValue(brand);
 
-    await expect(controller.remove(1n)).resolves.toStrictEqual(brand);
+    await expect(controller.remove(brand)).resolves.toStrictEqual(brand);
   });
 });
