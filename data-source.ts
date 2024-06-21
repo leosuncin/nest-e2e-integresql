@@ -4,6 +4,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 
 import { CreateBrandsTable } from '~bikeshop/1718954984063-create-brands-table';
 import { Brand } from '~bikeshop/brand.entity';
+import { Category } from '~bikeshop/category.entity';
 
 const options = {
   type: 'postgres',
@@ -11,7 +12,7 @@ const options = {
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   synchronize: false,
-  entities: [Brand],
+  entities: [Brand, Category],
   migrations: [CreateBrandsTable],
 } satisfies DataSourceOptions;
 
