@@ -11,6 +11,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  integresql:
+    image: allaboutapps/integresql
+    profiles:
+      - testing
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      INTEGRESQL_PGPASSWORD: $POSTGRES_PASSWORD
+      INTEGRESQL_PGUSER: $POSTGRES_USER
+      INTEGRESQL_PGDATABASE: $POSTGRES_DB
+      INTEGRESQL_PGHOST: postgres
+    ports:
+      - '5000:5000'
 
 volumes:
   postgres-data:
