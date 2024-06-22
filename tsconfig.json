@@ -21,7 +21,8 @@
         "src/bikeshop/dto/*",
         "src/bikeshop/services/*",
         "src/bikeshop/controllers/*",
-        "src/bikeshop/pipes/*"
+        "src/bikeshop/pipes/*",
+        "src/bikeshop/testing/*"
       ],
       "~common/*": [
         "src/common/*",
