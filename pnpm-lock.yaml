@@ -48,6 +48,9 @@ importers:
       '@devoxa/integresql-client':
         specifier: ^2.0.0
         version: 2.0.0
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
       '@nestjs/cli':
         specifier: ^10.0.0
         version: 10.3.2
