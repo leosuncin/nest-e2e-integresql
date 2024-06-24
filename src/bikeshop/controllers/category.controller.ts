@@ -18,7 +18,7 @@ import { UpdateCategory } from '~bikeshop/update-category.dto';
 import { EntityNotFoundFilter } from '~common/entity-not-found.filter';
 import { ParseBigIntPipe } from '~common/parse-big-int.pipe';
 
-@Controller('categorys')
+@Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
