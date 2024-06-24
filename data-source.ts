@@ -10,12 +10,12 @@ import { brandFactory } from '~bikeshop/brand.factory';
 import { BrandSeeder } from '~bikeshop/brand.seeder';
 import { Category } from '~bikeshop/category.entity';
 
-const options = {
+export const options = {
   type: 'postgres',
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  synchronize: false,}
+  synchronize: false,
   entities: [Brand, Category],
   migrations: [CreateBrandsTable, CreateCategoriesTable],
   factories: [brandFactory],
