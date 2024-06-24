@@ -9,6 +9,7 @@ import { Brand } from '~bikeshop/brand.entity';
 import { brandFactory } from '~bikeshop/brand.factory';
 import { BrandSeeder } from '~bikeshop/brand.seeder';
 import { Category } from '~bikeshop/category.entity';
+import { categoryFactory } from '~bikeshop/category.factory';
 
 export const options = {
   type: 'postgres',
@@ -18,7 +19,7 @@ export const options = {
   synchronize: false,
   entities: [Brand, Category],
   migrations: [CreateBrandsTable, CreateCategoriesTable],
-  factories: [brandFactory],
+  factories: [brandFactory, categoryFactory],
   seeds: [BrandSeeder],
 } satisfies DataSourceOptions & SeederOptions;
 
