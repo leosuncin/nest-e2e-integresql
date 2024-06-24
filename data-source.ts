@@ -5,6 +5,7 @@ import { SeederOptions } from 'typeorm-extension';
 
 import { CreateBrandsTable } from '~bikeshop/1718954984063-create-brands-table';
 import { CreateCategoriesTable } from '~bikeshop/1719002522747-create-categories-table';
+import { CreateProductsTable } from '~bikeshop/1719220180803-create-products-table';
 import { Brand } from '~bikeshop/brand.entity';
 import { brandFactory } from '~bikeshop/brand.factory';
 import { BrandSeeder } from '~bikeshop/brand.seeder';
@@ -20,7 +21,7 @@ export const options = {
   database: process.env.POSTGRES_DB,
   synchronize: false,
   entities: [Brand, Category, Product],
-  migrations: [CreateBrandsTable, CreateCategoriesTable],
+  migrations: [CreateBrandsTable, CreateCategoriesTable, CreateProductsTable],
   factories: [brandFactory, categoryFactory],
   seeds: [BrandSeeder, CategorySeeder],
 } satisfies DataSourceOptions & SeederOptions;
