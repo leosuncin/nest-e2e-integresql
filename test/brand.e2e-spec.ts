@@ -1,24 +1,21 @@
 import { IntegreSQLClient } from '@devoxa/integresql-client';
 import { faker } from '@faker-js/faker';
 import { HttpStatus, INestApplication } from '@nestjs/common';
+import { getConfigToken } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import request from 'supertest';
-import { DataSource, DataSourceOptions } from 'typeorm';
-import { SeederOptions, runSeeders } from 'typeorm-extension';
+import { DataSource } from 'typeorm';
+import { runSeeders } from 'typeorm-extension';
 
-import { CreateBrandsTable } from '~bikeshop/1718954984063-create-brands-table';
-import { BikeshopModule } from '~bikeshop/bikeshop.module';
-import { Brand } from '~bikeshop/brand.entity';
-import { brandFactory } from '~bikeshop/brand.factory';
-import { BrandSeeder } from '~bikeshop/brand.seeder';
+import { AppModule } from '~/app.module';
 import { brands } from '~bikeshop/brands.fixtures';
+import { options as defaultDataSourceOptions } from '../data-source';
 
 const client = new IntegreSQLClient({
   url: process.env.INTEGRESQL_URL ?? 'http://localhost:5000',
 });
 
-describe('BrandController (e2e with IntegreSQL)', () => {
+describe('BrandController (e2e)', () => {
   let app: INestApplication;
   let hash: string;
 
@@ -29,17 +26,12 @@ describe('BrandController (e2e with IntegreSQL)', () => {
     ]);
 
     await client.initializeTemplate(hash, async (config) => {
-      const options: DataSourceOptions & SeederOptions = {
-        type: 'postgres',
+      const dataSource = new DataSource({
+        ...defaultDataSourceOptions,
         username: config.username,
         password: config.password,
         database: config.database,
-        entities: [Brand],
-        migrations: [CreateBrandsTable],
-        factories: [brandFactory],
-        seeds: [BrandSeeder],
-      };
-      const dataSource = new DataSource(options);
+      });
 
       await dataSource.initialize();
       await dataSource.runMigrations();
@@ -50,23 +42,25 @@ describe('BrandController (e2e with IntegreSQL)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRootAsync({
-          imports: [],
-          async useFactory() {
-            const options = await client.getTestDatabase(hash);
-            return {
-              type: 'postgres',
-              username: options.username,
-              password: options.password,
-              database: options.database,
-              autoLoadEntities: true,
-            };
-          },
-        }),
-        BikeshopModule,
-      ],
-    }).compile();
+      imports: [AppModule],
+    })
+      .overrideProvider(getConfigToken('typeorm'))
+      .useFactory({
+        async factory() {
+          const { database, password, port, username } =
+            await client.getTestDatabase(hash);
+
+          return {
+            type: 'postgres',
+            autoLoadEntities: true,
+            database,
+            password,
+            port,
+            username,
+          };
+        },
+      })
+      .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
