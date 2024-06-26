@@ -17,4 +17,8 @@ export class ProductService {
 
     return this.productRepository.save(product);
   }
+
+  findAll() {
+    return this.productRepository.find();
+  }
 }

@@ -17,6 +17,7 @@ describe('ProductController', () => {
           provide: ProductService,
           useValue: {
             create: jest.fn(),
+            findAll: jest.fn(),
           },
         },
       ],
@@ -52,5 +53,26 @@ describe('ProductController', () => {
     await expect(controller.create(newProduct)).resolves.toStrictEqual(
       createdProduct,
     );
+  });
+
+  it('should find all products', async () => {
+    const products: Product[] = [
+      {
+        id: 1n,
+        name: 'Product',
+        modelYear: 2024,
+        listPrice: 99.99,
+        // @ts-expect-error foreign key
+        brand: 1n,
+        brandId: 1n,
+        // @ts-expect-error foreign key
+        category: 1n,
+        categoryId: 1n,
+      },
+    ];
+
+    mockedService.findAll.mockResolvedValue(products);
+
+    await expect(controller.findAll()).resolves.toStrictEqual(products);
   });
 });
