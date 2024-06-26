@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 
 import { CreateProduct } from '~bikeshop/create-product.dto';
 import { Product } from '~bikeshop/product.entity';
@@ -20,6 +20,7 @@ describe('ProductService', () => {
               create: jest.fn(),
               save: jest.fn(),
               find: jest.fn(),
+              findOneByOrFail: jest.fn(),
             };
           },
         },
@@ -79,5 +80,32 @@ describe('ProductService', () => {
     mockedRepository.find.mockResolvedValue(products);
 
     await expect(service.findAll()).resolves.toStrictEqual(products);
+  });
+
+  it('should find a product by id', async () => {
+    const product: Product = {
+      id: 1n,
+      name: 'Product',
+      modelYear: 2024,
+      listPrice: 99.99,
+      // @ts-expect-error foreign key
+      brand: 1n,
+      brandId: 1n,
+      // @ts-expect-error foreign key
+      category: 1n,
+      categoryId: 1n,
+    };
+
+    mockedRepository.findOneByOrFail.mockResolvedValueOnce(product);
+
+    await expect(service.findOne(1n)).resolves.toStrictEqual(product);
+  });
+
+  it('should throw an error when product is not found', async () => {
+    mockedRepository.findOneByOrFail.mockRejectedValue(
+      new EntityNotFoundError(Product, { id: 404n }),
+    );
+
+    await expect(service.findOne(404n)).rejects.toThrow();
   });
 });

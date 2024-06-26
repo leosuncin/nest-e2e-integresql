@@ -22,7 +22,16 @@ export class Product {
   @Check('"model_year" >= 1970')
   modelYear!: number;
 
-  @Column({ type: 'decimal', precision: 8, scale: 2, name: 'list_price' })
+  @Column({
+    type: 'decimal',
+    precision: 8,
+    scale: 2,
+    name: 'list_price',
+    transformer: {
+      from: (value: string) => Number.parseFloat(value),
+      to: (value: number) => value,
+    },
+  })
   @Check('"list_price" > 0')
   listPrice!: number;
 

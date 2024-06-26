@@ -21,4 +21,8 @@ export class ProductService {
   findAll() {
     return this.productRepository.find();
   }
+
+  findOne(id: bigint) {
+    return this.productRepository.findOneByOrFail({ id });
+  }
 }
