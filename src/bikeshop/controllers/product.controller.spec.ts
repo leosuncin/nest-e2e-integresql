@@ -5,6 +5,7 @@ import { CreateProduct } from '~bikeshop/create-product.dto';
 import { ProductController } from '~bikeshop/product.controller';
 import { Product } from '~bikeshop/product.entity';
 import { ProductService } from '~bikeshop/product.service';
+import { UpdateProduct } from '~bikeshop/update-product.dto';
 
 describe('ProductController', () => {
   let controller: ProductController;
@@ -20,6 +21,7 @@ describe('ProductController', () => {
             create: jest.fn(),
             findAll: jest.fn(),
             findOne: jest.fn(),
+            update: jest.fn(),
           },
         },
       ],
@@ -103,5 +105,28 @@ describe('ProductController', () => {
     );
 
     await expect(controller.findOne(404n)).rejects.toThrow();
+  });
+
+  it('should update a product', async () => {
+    const productChanges: UpdateProduct = { name: 'New Product' };
+    const product: Product = {
+      id: 1n,
+      name: 'Product',
+      modelYear: 2024,
+      listPrice: 99.99,
+      // @ts-expect-error foreign key
+      brand: 1n,
+      brandId: 1n,
+      // @ts-expect-error foreign key
+      category: 1n,
+      categoryId: 1n,
+    };
+    const updatedProduct: Product = { ...product, ...productChanges };
+
+    mockedService.update.mockResolvedValue(updatedProduct);
+
+    await expect(
+      controller.update(product, productChanges),
+    ).resolves.toStrictEqual(updatedProduct);
   });
 });

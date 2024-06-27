@@ -4,6 +4,7 @@ import type { Repository } from 'typeorm';
 
 import { CreateProduct } from '~bikeshop/create-product.dto';
 import { Product } from '~bikeshop/product.entity';
+import { UpdateProduct } from '~bikeshop/update-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -24,5 +25,11 @@ export class ProductService {
 
   findOne(id: bigint) {
     return this.productRepository.findOneByOrFail({ id });
+  }
+
+  update(product: Product, productChanges: UpdateProduct) {
+    this.productRepository.merge(product, productChanges);
+
+    return this.productRepository.save(product);
   }
 }

@@ -5,6 +5,7 @@ import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateProduct } from '~bikeshop/create-product.dto';
 import { Product } from '~bikeshop/product.entity';
 import { ProductService } from '~bikeshop/product.service';
+import { UpdateProduct } from '~bikeshop/update-product.dto';
 
 describe('ProductService', () => {
   let service: ProductService;
@@ -21,6 +22,7 @@ describe('ProductService', () => {
               save: jest.fn(),
               find: jest.fn(),
               findOneByOrFail: jest.fn(),
+              merge: Object.assign,
             };
           },
         },
@@ -107,5 +109,31 @@ describe('ProductService', () => {
     );
 
     await expect(service.findOne(404n)).rejects.toThrow();
+  });
+
+  it('should update a product', async () => {
+    const productChanges: UpdateProduct = { name: 'Updated Product' };
+    const product: Product = {
+      id: 1n,
+      name: 'Product',
+      modelYear: 2024,
+      listPrice: 99.99,
+      // @ts-expect-error foreign key
+      brand: 1n,
+      brandId: 1n,
+      // @ts-expect-error foreign key
+      category: 1n,
+      categoryId: 1n,
+    };
+    const updatedProduct: Product = {
+      ...product,
+      ...productChanges,
+    };
+
+    mockedRepository.save.mockResolvedValue(updatedProduct);
+
+    await expect(
+      service.update(product, productChanges),
+    ).resolves.toStrictEqual(updatedProduct);
   });
 });
