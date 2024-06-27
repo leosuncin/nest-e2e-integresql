@@ -14,6 +14,7 @@ import { categoryFactory } from '~bikeshop/category.factory';
 import { CategorySeeder } from '~bikeshop/category.seeder';
 import { Product } from '~bikeshop/product.entity';
 import { productFactory } from '~bikeshop/product.factory';
+import { ProductSeeder } from '~bikeshop/product.seeder';
 
 export const options = {
   type: 'postgres',
@@ -24,7 +25,7 @@ export const options = {
   entities: [Brand, Category, Product],
   migrations: [CreateBrandsTable, CreateCategoriesTable, CreateProductsTable],
   factories: [brandFactory, categoryFactory, productFactory],
-  seeds: [BrandSeeder, CategorySeeder],
+  seeds: [BrandSeeder, CategorySeeder, ProductSeeder],
 } satisfies DataSourceOptions & SeederOptions;
 
 export default new DataSource(options);
