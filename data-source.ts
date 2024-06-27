@@ -13,6 +13,7 @@ import { Category } from '~bikeshop/category.entity';
 import { categoryFactory } from '~bikeshop/category.factory';
 import { CategorySeeder } from '~bikeshop/category.seeder';
 import { Product } from '~bikeshop/product.entity';
+import { productFactory } from '~bikeshop/product.factory';
 
 export const options = {
   type: 'postgres',
@@ -22,7 +23,7 @@ export const options = {
   synchronize: false,
   entities: [Brand, Category, Product],
   migrations: [CreateBrandsTable, CreateCategoriesTable, CreateProductsTable],
-  factories: [brandFactory, categoryFactory],
+  factories: [brandFactory, categoryFactory, productFactory],
   seeds: [BrandSeeder, CategorySeeder],
 } satisfies DataSourceOptions & SeederOptions;
 
