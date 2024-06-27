@@ -12,6 +12,7 @@ import { BrandSeeder } from '~bikeshop/brand.seeder';
 import { Category } from '~bikeshop/category.entity';
 import { categoryFactory } from '~bikeshop/category.factory';
 import { CategorySeeder } from '~bikeshop/category.seeder';
+import { Customer } from '~bikeshop/customer.entity';
 import { Product } from '~bikeshop/product.entity';
 import { productFactory } from '~bikeshop/product.factory';
 import { ProductSeeder } from '~bikeshop/product.seeder';
@@ -22,7 +23,7 @@ export const options = {
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   synchronize: false,
-  entities: [Brand, Category, Product],
+  entities: [Brand, Category, Product, Customer],
   migrations: [CreateBrandsTable, CreateCategoriesTable, CreateProductsTable],
   factories: [brandFactory, categoryFactory, productFactory],
   seeds: [BrandSeeder, CategorySeeder, ProductSeeder],
