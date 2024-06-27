@@ -9,8 +9,9 @@ import {
   Min,
 } from 'class-validator';
 
-import type { Brand } from '~bikeshop/brand.entity';
-import type { Category } from '~bikeshop/category.entity';
+import { Brand } from '~bikeshop/brand.entity';
+import { Category } from '~bikeshop/category.entity';
+import { IsForeignKey } from '~bikeshop/is-foreign-key.validator';
 
 export class CreateProduct {
   @IsDefined()
@@ -33,9 +34,11 @@ export class CreateProduct {
 
   @IsDefined()
   @IsNumberString()
+  @IsForeignKey(Brand)
   readonly brand!: Brand;
 
   @IsDefined()
   @IsNumberString()
+  @IsForeignKey(Category)
   readonly category!: Category;
 }
