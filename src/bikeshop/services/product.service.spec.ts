@@ -23,6 +23,7 @@ describe('ProductService', () => {
               find: jest.fn(),
               findOneByOrFail: jest.fn(),
               merge: Object.assign,
+              remove: jest.fn(),
             };
           },
         },
@@ -135,5 +136,24 @@ describe('ProductService', () => {
     await expect(
       service.update(product, productChanges),
     ).resolves.toStrictEqual(updatedProduct);
+  });
+
+  it('should remove a product', async () => {
+    const product: Product = {
+      id: 1n,
+      name: 'Product',
+      modelYear: 2024,
+      listPrice: 99.99,
+      // @ts-expect-error foreign key
+      brand: 1n,
+      brandId: 1n,
+      // @ts-expect-error foreign key
+      category: 1n,
+      categoryId: 1n,
+    };
+
+    mockedRepository.remove.mockResolvedValueOnce(product);
+
+    await expect(service.remove(product)).resolves.toStrictEqual(product);
   });
 });

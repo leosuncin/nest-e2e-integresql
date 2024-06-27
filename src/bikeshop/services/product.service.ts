@@ -32,4 +32,8 @@ export class ProductService {
 
     return this.productRepository.save(product);
   }
+
+  remove(product: Product) {
+    return this.productRepository.remove(product);
+  }
 }

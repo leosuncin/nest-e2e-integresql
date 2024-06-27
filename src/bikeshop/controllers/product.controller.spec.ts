@@ -22,6 +22,7 @@ describe('ProductController', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
+            remove: jest.fn(),
           },
         },
       ],
@@ -128,5 +129,24 @@ describe('ProductController', () => {
     await expect(
       controller.update(product, productChanges),
     ).resolves.toStrictEqual(updatedProduct);
+  });
+
+  it('should remove a product', async () => {
+    const product: Product = {
+      id: 1n,
+      name: 'Product',
+      modelYear: 2024,
+      listPrice: 99.99,
+      // @ts-expect-error foreign key
+      brand: 1n,
+      brandId: 1n,
+      // @ts-expect-error foreign key
+      category: 1n,
+      categoryId: 1n,
+    };
+
+    mockedService.remove.mockResolvedValue(product);
+
+    await expect(controller.remove(product)).resolves.toStrictEqual(product);
   });
 });

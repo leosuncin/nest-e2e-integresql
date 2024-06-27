@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -44,5 +45,11 @@ export class ProductController {
     @Body(ValidationPipe) productChanges: UpdateProduct,
   ) {
     return this.productService.update(product, productChanges);
+  }
+
+  @Delete(':id')
+  @UseFilters(EntityNotFoundFilter)
+  remove(@Param('id', ParseBigIntPipe, CastProductPipe) product: Product) {
+    return this.productService.remove(product);
   }
 }
