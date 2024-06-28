@@ -17,4 +17,8 @@ export class CustomerService {
 
     return this.customerRepository.save(customer);
   }
+
+  findAll() {
+    return this.customerRepository.find();
+  }
 }

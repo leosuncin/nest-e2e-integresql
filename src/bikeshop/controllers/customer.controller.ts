@@ -1,4 +1,4 @@
-import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
 
 import { CreateCustomer } from '~bikeshop/create-customer.dto';
 import { CustomerService } from '~bikeshop/customer.service';
@@ -10,5 +10,10 @@ export class CustomerController {
   @Post()
   create(@Body(ValidationPipe) newCustomer: CreateCustomer) {
     return this.customerService.create(newCustomer);
+  }
+
+  @Get()
+  findAll() {
+    return this.customerService.findAll();
   }
 }

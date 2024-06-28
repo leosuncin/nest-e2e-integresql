@@ -17,6 +17,7 @@ describe('CustomerController', () => {
           provide: CustomerService,
           useValue: {
             create: jest.fn(),
+            findAll: jest.fn(),
           },
         },
       ],
@@ -48,5 +49,25 @@ describe('CustomerController', () => {
     await expect(controller.create(newCustomer)).resolves.toStrictEqual(
       createdCustomer,
     );
+  });
+
+  it('should find all customers', async () => {
+    const customers: Customer[] = [
+      {
+        id: 1n,
+        firstName: 'Kiara',
+        lastName: 'Katelynn',
+        email: 'kiara_katelynn@hotmail.com',
+        phone: '(471) 802-0544',
+        street: '8639 Webster Underpass',
+        city: 'East Kellie',
+        state: 'South Dakota',
+        zipCode: '57070',
+      },
+    ];
+
+    mockedService.findAll.mockResolvedValue(customers);
+
+    await expect(controller.findAll()).resolves.toStrictEqual(customers);
   });
 });
