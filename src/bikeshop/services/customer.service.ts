@@ -21,4 +21,8 @@ export class CustomerService {
   findAll() {
     return this.customerRepository.find();
   }
+
+  findOne(id: bigint) {
+    return this.customerRepository.findOneByOrFail({ id });
+  }
 }

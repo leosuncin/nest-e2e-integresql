@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 
 import { CreateCustomer } from '~bikeshop/create-customer.dto';
 import { Customer } from '~bikeshop/customer.entity';
@@ -20,6 +20,7 @@ describe('CustomerService', () => {
               create: jest.fn(),
               save: jest.fn(),
               find: jest.fn(),
+              findOneByOrFail: jest.fn(),
             };
           },
         },
@@ -74,5 +75,31 @@ describe('CustomerService', () => {
     mockedRepository.find.mockResolvedValue(customers);
 
     await expect(service.findAll()).resolves.toStrictEqual(customers);
+  });
+
+  it('should find a customer by id', async () => {
+    const customer: Customer = {
+      id: 1n,
+      firstName: 'Kiara',
+      lastName: 'Katelynn',
+      email: 'kiara_katelynn@hotmail.com',
+      phone: '(471) 802-0544',
+      street: '8639 Webster Underpass',
+      city: 'East Kellie',
+      state: 'South Dakota',
+      zipCode: '57070',
+    };
+
+    mockedRepository.findOneByOrFail.mockResolvedValueOnce(customer);
+
+    await expect(service.findOne(1n)).resolves.toStrictEqual(customer);
+  });
+
+  it('should throw an error when customer is not found', async () => {
+    mockedRepository.findOneByOrFail.mockRejectedValue(
+      new EntityNotFoundError(Customer, { id: 404n }),
+    );
+
+    await expect(service.findOne(404n)).rejects.toThrow();
   });
 });

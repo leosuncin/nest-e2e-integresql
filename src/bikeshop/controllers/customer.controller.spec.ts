@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EntityNotFoundError } from 'typeorm';
 
 import { CreateCustomer } from '~bikeshop/create-customer.dto';
 import { CustomerController } from '~bikeshop/customer.controller';
@@ -18,6 +19,7 @@ describe('CustomerController', () => {
           useValue: {
             create: jest.fn(),
             findAll: jest.fn(),
+            findOne: jest.fn(),
           },
         },
       ],
@@ -69,5 +71,31 @@ describe('CustomerController', () => {
     mockedService.findAll.mockResolvedValue(customers);
 
     await expect(controller.findAll()).resolves.toStrictEqual(customers);
+  });
+
+  it('should find a customer by id', async () => {
+    const customer: Customer = {
+      id: 1n,
+      firstName: 'Kiara',
+      lastName: 'Katelynn',
+      email: 'kiara_katelynn@hotmail.com',
+      phone: '(471) 802-0544',
+      street: '8639 Webster Underpass',
+      city: 'East Kellie',
+      state: 'South Dakota',
+      zipCode: '57070',
+    };
+
+    mockedService.findOne.mockResolvedValue(customer);
+
+    await expect(controller.findOne(1n)).resolves.toStrictEqual(customer);
+  });
+
+  it('should throw an error if the customer was not found', async () => {
+    mockedService.findOne.mockRejectedValue(
+      new EntityNotFoundError(Customer, { id: 404n }),
+    );
+
+    await expect(controller.findOne(404n)).rejects.toThrow();
   });
 });
