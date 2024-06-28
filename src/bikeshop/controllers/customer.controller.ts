@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -44,5 +45,11 @@ export class CustomerController {
     @Body(ValidationPipe) customerChanges: UpdateCustomer,
   ) {
     return this.customerService.update(customer, customerChanges);
+  }
+
+  @Delete(':id')
+  @UseFilters(EntityNotFoundFilter)
+  remove(@Param('id', ParseBigIntPipe, CastCustomerPipe) customer: Customer) {
+    return this.customerService.remove(customer);
   }
 }

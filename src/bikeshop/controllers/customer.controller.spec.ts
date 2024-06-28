@@ -22,6 +22,7 @@ describe('CustomerController', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
+            remove: jest.fn(),
           },
         },
       ],
@@ -123,5 +124,23 @@ describe('CustomerController', () => {
     await expect(
       controller.update(customer, customerChanges),
     ).resolves.toStrictEqual(updatedCustomer);
+  });
+
+  it('should remove a customer', async () => {
+    const customer: Customer = {
+      id: 1n,
+      firstName: 'Kiara',
+      lastName: 'Katelynn',
+      email: 'kiara_katelynn@hotmail.com',
+      phone: '(471) 802-0544',
+      street: '8639 Webster Underpass',
+      city: 'East Kellie',
+      state: 'South Dakota',
+      zipCode: '57070',
+    };
+
+    mockedService.remove.mockResolvedValue(customer);
+
+    await expect(controller.remove(customer)).resolves.toStrictEqual(customer);
   });
 });

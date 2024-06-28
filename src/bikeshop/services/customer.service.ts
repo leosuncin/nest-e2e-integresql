@@ -32,4 +32,8 @@ export class CustomerService {
 
     return this.customerRepository.save(customer);
   }
+
+  remove(customer: Customer) {
+    return this.customerRepository.remove(customer);
+  }
 }
