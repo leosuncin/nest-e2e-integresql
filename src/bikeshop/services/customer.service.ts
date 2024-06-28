@@ -4,6 +4,7 @@ import type { Repository } from 'typeorm';
 
 import { CreateCustomer } from '~bikeshop/create-customer.dto';
 import { Customer } from '~bikeshop/customer.entity';
+import { UpdateCustomer } from '~bikeshop/update-customer.dto';
 
 @Injectable()
 export class CustomerService {
@@ -24,5 +25,11 @@ export class CustomerService {
 
   findOne(id: bigint) {
     return this.customerRepository.findOneByOrFail({ id });
+  }
+
+  update(customer: Customer, customerChanges: UpdateCustomer) {
+    this.customerRepository.merge(customer, customerChanges);
+
+    return this.customerRepository.save(customer);
   }
 }

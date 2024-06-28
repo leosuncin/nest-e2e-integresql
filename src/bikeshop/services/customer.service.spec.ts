@@ -5,6 +5,7 @@ import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateCustomer } from '~bikeshop/create-customer.dto';
 import { Customer } from '~bikeshop/customer.entity';
 import { CustomerService } from '~bikeshop/customer.service';
+import { UpdateCustomer } from '~bikeshop/update-customer.dto';
 
 describe('CustomerService', () => {
   let service: CustomerService;
@@ -21,6 +22,7 @@ describe('CustomerService', () => {
               save: jest.fn(),
               find: jest.fn(),
               findOneByOrFail: jest.fn(),
+              merge: Object.assign,
             };
           },
         },
@@ -101,5 +103,29 @@ describe('CustomerService', () => {
     );
 
     await expect(service.findOne(404n)).rejects.toThrow();
+  });
+
+  it('should update a customer', async () => {
+    const customerChanges: UpdateCustomer = {
+      email: 'kiara_katelynn92@gmail.com',
+    };
+    const customer: Customer = {
+      id: 1n,
+      firstName: 'Kiara',
+      lastName: 'Katelynn',
+      email: 'kiara_katelynn@hotmail.com',
+      phone: '(471) 802-0544',
+      street: '8639 Webster Underpass',
+      city: 'East Kellie',
+      state: 'South Dakota',
+      zipCode: '57070',
+    };
+    const updatedCustomer: Customer = { ...customer, ...customerChanges };
+
+    mockedRepository.save.mockResolvedValue(updatedCustomer);
+
+    await expect(
+      service.update(customer, customerChanges),
+    ).resolves.toStrictEqual(updatedCustomer);
   });
 });
