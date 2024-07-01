@@ -16,6 +16,7 @@ import { Customer } from '~bikeshop/customer.entity';
 import { CustomerService } from '~bikeshop/customer.service';
 import { UpdateCustomer } from '~bikeshop/update-customer.dto';
 import { EntityNotFoundFilter } from '~common/entity-not-found.filter';
+import { EntityDuplicatedFilter } from '~common/entity-duplicated.filter';
 import { ParseBigIntPipe } from '~common/parse-big-int.pipe';
 
 @Controller('customers')
@@ -23,6 +24,7 @@ export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
   @Post()
+  @UseFilters(EntityDuplicatedFilter)
   create(@Body(ValidationPipe) newCustomer: CreateCustomer) {
     return this.customerService.create(newCustomer);
   }
@@ -39,7 +41,7 @@ export class CustomerController {
   }
 
   @Patch(':id')
-  @UseFilters(EntityNotFoundFilter)
+  @UseFilters(EntityNotFoundFilter, EntityDuplicatedFilter)
   update(
     @Param('id', ParseBigIntPipe, CastCustomerPipe) customer: Customer,
     @Body(ValidationPipe) customerChanges: UpdateCustomer,
