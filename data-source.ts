@@ -14,6 +14,7 @@ import { Category } from '~bikeshop/category.entity';
 import { categoryFactory } from '~bikeshop/category.factory';
 import { CategorySeeder } from '~bikeshop/category.seeder';
 import { Customer } from '~bikeshop/customer.entity';
+import { customerFactory } from '~bikeshop/customer.factory';
 import { Product } from '~bikeshop/product.entity';
 import { productFactory } from '~bikeshop/product.factory';
 import { ProductSeeder } from '~bikeshop/product.seeder';
@@ -31,7 +32,7 @@ export const options = {
     CreateProductsTable,
     CreateCustomersTable,
   ],
-  factories: [brandFactory, categoryFactory, productFactory],
+  factories: [brandFactory, categoryFactory, productFactory, customerFactory],
   seeds: [BrandSeeder, CategorySeeder, ProductSeeder],
 } satisfies DataSourceOptions & SeederOptions;
 
