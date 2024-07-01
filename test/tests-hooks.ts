@@ -17,6 +17,7 @@ export async function initializeIntegreSQL() {
   const hash = await client.hashFiles([
     'src/bikeshop/migrations/*.ts',
     'src/bikeshop/testing/*.ts',
+    'data-source.ts',
   ]);
 
   await client.initializeTemplate(
