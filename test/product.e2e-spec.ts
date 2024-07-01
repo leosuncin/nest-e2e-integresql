@@ -1,71 +1,20 @@
-import { IntegreSQLClient } from '@devoxa/integresql-client';
 import { faker } from '@faker-js/faker';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { getConfigToken } from '@nestjs/config';
-import { Test, TestingModule } from '@nestjs/testing';
-import { useContainer } from 'class-validator';
 import request from 'supertest';
-import { DataSource } from 'typeorm';
-import { runSeeders } from 'typeorm-extension';
 
-import { AppModule } from '~/app.module';
 import { products } from '~bikeshop/products.fixtures';
-import { options as defaultDataSourceOptions } from '../data-source';
-
-const client = new IntegreSQLClient({
-  url: process.env.INTEGRESQL_URL ?? 'http://localhost:5000',
-});
+import { bootstrapApp, initializeIntegreSQL } from './tests-hooks';
 
 describe('ProductController (e2e)', () => {
   let app: INestApplication;
   let hash: string;
 
   beforeAll(async () => {
-    hash = await client.hashFiles([
-      'src/bikeshop/migrations/*.ts',
-      'src/bikeshop/testing/*.ts',
-    ]);
-
-    await client.initializeTemplate(hash, async (config) => {
-      const dataSource = new DataSource({
-        ...defaultDataSourceOptions,
-        username: config.username,
-        password: config.password,
-        database: config.database,
-      });
-
-      await dataSource.initialize();
-      await dataSource.runMigrations();
-      await runSeeders(dataSource);
-      await dataSource.destroy();
-    });
+    hash = await initializeIntegreSQL();
   });
 
   beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    })
-      .overrideProvider(getConfigToken('typeorm'))
-      .useFactory({
-        async factory() {
-          const { database, password, port, username } =
-            await client.getTestDatabase(hash);
-
-          return {
-            type: 'postgres',
-            autoLoadEntities: true,
-            database,
-            password,
-            port,
-            username,
-          };
-        },
-      })
-      .compile();
-
-    app = moduleFixture.createNestApplication();
-    useContainer(app.select(AppModule), { fallbackOnErrors: true });
-    await app.init();
+    app = await bootstrapApp(hash);
   });
 
   afterEach(async () => {
