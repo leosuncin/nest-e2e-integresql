@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  test:
+    name: Run the unit tests 🧪
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip-ci')"
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v4
+      - name: Install PNPM 🧰
+        uses: wyvox/action-setup-pnpm@v3
+      - name: Run tests 🧪
+        run: pnpm test:coverage --ci --json --testLocationInResults --outputFile=result.json
+      - name: Report test results 📝
+        uses: tanmen/jest-reporter@v1
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Monitor coverage 📫
+        uses: slavcodev/coverage-monitor-action@1.9.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          coverage_format: clover
+          coverage_path: coverage/clover.xml
+          check: github.event_name == 'pull_request'
+          threshold_alert: 50
+          threshold_warning: 80
+      - name: Upload code coverage ⬆️
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage
+
+  e2e:
+    name: Run the end to end tests 🚔
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'skip-ci')"
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ${{ github.actor }}
+          POSTGRES_PASSWORD: ${{ github.sha }}
+          POSTGRES_DB: ${{ github.repository }}
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      integresql:
+        image: allaboutapps/integresql
+        env:
+          INTEGRESQL_PGUSER: ${{ github.actor }}
+          INTEGRESQL_PGPASSWORD: ${{ github.sha }}
+          INTEGRESQL_PGDATABASE: ${{ github.repository }}
+          INTEGRESQL_PGHOST: postgres
+        ports:
+          - 5000:5000
+    env:
+      POSTGRES_USER: ${{ github.actor }}
+      POSTGRES_PASSWORD: ${{ github.sha }}
+      POSTGRES_DB: ${{ github.repository }}
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v4
+      - name: Install PNPM 🧰
+        uses: wyvox/action-setup-pnpm@v3
+      - name: Run tests 🧪
+        run: pnpm test:e2e --ci --json --testLocationInResults --outputFile=result.json
+        env:
+          INTEGRESQL_URL: http://localhost:${{ job.services.integresql.ports['5000'] }}
+      - name: Report test results 📝
+        uses: tanmen/jest-reporter@v1
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          action-name: e2e report
