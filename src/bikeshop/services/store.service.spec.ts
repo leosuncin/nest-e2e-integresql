@@ -19,6 +19,7 @@ describe('StoreService', () => {
             return {
               create: jest.fn(),
               save: jest.fn(),
+              find: jest.fn(),
             };
           },
         },
@@ -50,5 +51,24 @@ describe('StoreService', () => {
     mockedRepository.save.mockResolvedValue(createdStore);
 
     await expect(service.create(newStore)).resolves.toStrictEqual(createdStore);
+  });
+
+  it('should find all the stores', async () => {
+    const stores: Store[] = [
+      {
+        id: 1n,
+        name: 'Reichert, Daugherty and Kreiger Bikes',
+        email: 'reichert.daugherty.kreiger@bike.shop',
+        phone: '+595 528-0109',
+        street: '4812 Bobby Lodge',
+        city: 'Joannieberg',
+        state: 'Wisconsin',
+        zipCode: '99053',
+      },
+    ];
+
+    mockedRepository.find.mockResolvedValue(stores);
+
+    await expect(service.findAll()).resolves.toStrictEqual(stores);
   });
 });

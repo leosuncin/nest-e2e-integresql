@@ -17,4 +17,8 @@ export class StoreService {
 
     return this.storeRepository.save(store);
   }
+
+  findAll() {
+    return this.storeRepository.find();
+  }
 }
