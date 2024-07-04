@@ -14,7 +14,9 @@ import { IsForeignKeyConstraint } from '~bikeshop/is-foreign-key.validator';
 import { ProductController } from '~bikeshop/product.controller';
 import { Product } from '~bikeshop/product.entity';
 import { ProductService } from '~bikeshop/product.service';
+import { StoreController } from '~bikeshop/store.controller';
 import { Store } from '~bikeshop/store.entity';
+import { StoreService } from '~bikeshop/store.service';
 
 @Module({
   imports: [
@@ -26,12 +28,14 @@ import { Store } from '~bikeshop/store.entity';
     ProductService,
     IsForeignKeyConstraint,
     CustomerService,
+    StoreService,
   ],
   controllers: [
     BrandController,
     CategoryController,
     ProductController,
     CustomerController,
+    StoreController,
   ],
 })
 export class BikeshopModule {}
