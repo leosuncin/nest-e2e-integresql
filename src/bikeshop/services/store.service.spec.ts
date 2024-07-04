@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 
 import { CreateStore } from '~bikeshop/create-store.dto';
 import { Store } from '~bikeshop/store.entity';
@@ -20,6 +20,7 @@ describe('StoreService', () => {
               create: jest.fn(),
               save: jest.fn(),
               find: jest.fn(),
+              findOneByOrFail: jest.fn(),
             };
           },
         },
@@ -70,5 +71,30 @@ describe('StoreService', () => {
     mockedRepository.find.mockResolvedValue(stores);
 
     await expect(service.findAll()).resolves.toStrictEqual(stores);
+  });
+
+  it('should find a store by id', async () => {
+    const store: Store = {
+      id: 1n,
+      name: 'Reichert, Daugherty and Kreiger Bikes',
+      email: 'reichert.daugherty.kreiger@bike.shop',
+      phone: '+595 528-0109',
+      street: '4812 Bobby Lodge',
+      city: 'Joannieberg',
+      state: 'Wisconsin',
+      zipCode: '99053',
+    };
+
+    mockedRepository.findOneByOrFail.mockResolvedValueOnce(store);
+
+    await expect(service.findOne(1n)).resolves.toStrictEqual(store);
+  });
+
+  it('should throw an error when store is not found', async () => {
+    mockedRepository.findOneByOrFail.mockRejectedValue(
+      new EntityNotFoundError(Store, { id: 404n }),
+    );
+
+    await expect(service.findOne(404n)).rejects.toThrow();
   });
 });

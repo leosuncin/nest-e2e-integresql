@@ -18,6 +18,7 @@ describe('StoreController', () => {
           useValue: {
             create: jest.fn(),
             findAll: jest.fn(),
+            findOne: jest.fn(),
           },
         },
       ],
@@ -67,5 +68,22 @@ describe('StoreController', () => {
     mockedService.findAll.mockResolvedValue(stores);
 
     await expect(controller.findAll()).resolves.toStrictEqual(stores);
+  });
+
+  it('should find a store by id', async () => {
+    const store: Store = {
+      id: 1n,
+      name: 'Reichert, Daugherty and Kreiger Bikes',
+      email: 'reichert.daugherty.kreiger@bike.shop',
+      phone: '+595 528-0109',
+      street: '4812 Bobby Lodge',
+      city: 'Joannieberg',
+      state: 'Wisconsin',
+      zipCode: '99053',
+    };
+
+    mockedService.findOne.mockResolvedValue(store);
+
+    await expect(controller.findOne(1n)).resolves.toStrictEqual(store);
   });
 });
