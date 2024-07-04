@@ -19,6 +19,7 @@ import { CustomerSeeder } from '~bikeshop/customer.seeder';
 import { Product } from '~bikeshop/product.entity';
 import { productFactory } from '~bikeshop/product.factory';
 import { ProductSeeder } from '~bikeshop/product.seeder';
+import { Store } from '~bikeshop/store.entity';
 
 export const options = {
   type: 'postgres',
@@ -26,7 +27,7 @@ export const options = {
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
   synchronize: false,
-  entities: [Brand, Category, Product, Customer],
+  entities: [Brand, Category, Product, Customer, Store],
   migrations: [
     CreateBrandsTable,
     CreateCategoriesTable,

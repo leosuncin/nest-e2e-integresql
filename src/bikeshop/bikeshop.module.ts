@@ -14,9 +14,12 @@ import { IsForeignKeyConstraint } from '~bikeshop/is-foreign-key.validator';
 import { ProductController } from '~bikeshop/product.controller';
 import { Product } from '~bikeshop/product.entity';
 import { ProductService } from '~bikeshop/product.service';
+import { Store } from '~bikeshop/store.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Brand, Category, Product, Customer])],
+  imports: [
+    TypeOrmModule.forFeature([Brand, Category, Product, Customer, Store]),
+  ],
   providers: [
     BrandService,
     CategoryService,
