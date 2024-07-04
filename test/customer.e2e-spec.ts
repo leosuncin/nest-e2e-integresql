@@ -175,7 +175,7 @@ describe('CustomerController (e2e)', () => {
           firstName: customer.firstName,
           lastName: customer.lastName,
           email: customer.email,
-          phone: null,
+          phone: customer.phone || null,
           street: customer.street,
           city: customer.city,
           state: customer.state,
