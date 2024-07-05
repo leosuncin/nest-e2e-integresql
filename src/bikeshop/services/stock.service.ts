@@ -18,8 +18,18 @@ export class StockService {
     return this.stockRepository.save(stock);
   }
 
-  findAll() {
-    return this.stockRepository.find();
+  findAllByProduct(productId: Stock['productId']) {
+    return this.stockRepository.find({
+      where: { productId },
+      relations: ['store'],
+    });
+  }
+
+  findAllByStore(storeId: Stock['storeId']) {
+    return this.stockRepository.find({
+      where: { storeId },
+      relations: ['product'],
+    });
   }
 
   findOne(productId: bigint, storeId: bigint) {

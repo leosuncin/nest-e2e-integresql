@@ -17,7 +17,8 @@ describe('StockController', () => {
           provide: StockService,
           useValue: {
             create: jest.fn(),
-            findAll: jest.fn(),
+            findAllByProduct: jest.fn(),
+            findAllByStore: jest.fn(),
             findOne: jest.fn(),
           },
         },
@@ -49,11 +50,21 @@ describe('StockController', () => {
     );
   });
 
-  it('should find all stocks', async () => {
+  it('should find all the stock by product', async () => {
     const stocks: Stock[] = [
       {
-        // @ts-expect-error foreign key
-        product: '1',
+        product: {
+          id: 1n,
+          name: 'Product',
+          modelYear: 2024,
+          listPrice: 99.99,
+          // @ts-expect-error foreign key
+          brand: 1n,
+          brandId: 1n,
+          // @ts-expect-error foreign key
+          category: 1n,
+          categoryId: 1n,
+        },
         productId: 1n,
         // @ts-expect-error foreign key
         store: '1',
@@ -62,9 +73,37 @@ describe('StockController', () => {
       },
     ];
 
-    mockedService.findAll.mockResolvedValue(stocks);
+    mockedService.findAllByProduct.mockResolvedValue(stocks);
 
-    await expect(controller.findAll()).resolves.toStrictEqual(stocks);
+    await expect(controller.findAllByProduct(1n)).resolves.toStrictEqual(
+      stocks,
+    );
+  });
+
+  it('should find all the stock by store', async () => {
+    const stocks: Stock[] = [
+      {
+        // @ts-expect-error foreign key
+        product: '1',
+        productId: 1n,
+        store: {
+          id: 1n,
+          name: 'Reichert, Daugherty and Kreiger Bikes',
+          email: 'reichert.daugherty.kreiger@bike.shop',
+          phone: '+595 528-0109',
+          street: '4812 Bobby Lodge',
+          city: 'Joannieberg',
+          state: 'Wisconsin',
+          zipCode: '99053',
+        },
+        storeId: 1n,
+        quantity: 100,
+      },
+    ];
+
+    mockedService.findAllByStore.mockResolvedValue(stocks);
+
+    await expect(controller.findAllByStore(1n)).resolves.toStrictEqual(stocks);
   });
 
   it('should find a stock by id', async () => {
