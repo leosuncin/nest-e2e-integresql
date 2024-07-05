@@ -15,7 +15,16 @@ export class EntityNotFoundFilter
     // @ts-expect-error get entity class name
     const entityName = exception.entityClass.name;
     const parameters = Object.entries(exception.criteria)
-      .map(([key, value]) => `${key} ${value}`)
+      .filter(([key]) => 'relations' !== key)
+      .map(([key, value]) => {
+        if (key === 'where') {
+          return Object.entries(value as Record<string, string>)
+            .map(([whereKey, whereValue]) => `${whereKey} = ${whereValue}`)
+            .join(', ');
+        }
+
+        return `${key} ${value}`;
+      })
       .join(', ');
 
     response.status(HttpStatus.NOT_FOUND).json({

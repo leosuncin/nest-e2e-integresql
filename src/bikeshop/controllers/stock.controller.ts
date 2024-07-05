@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseFilters,
   ValidationPipe,
 } from '@nestjs/common';
@@ -32,11 +33,11 @@ export class StockController {
     return this.stockService.findAllByProduct(productId);
   }
 
-  @Get('stocks/:productId&:storeId')
+  @Get('stock')
   @UseFilters(EntityNotFoundFilter)
   async findOne(
-    @Param('productId', ParseBigIntPipe) productId: bigint,
-    @Param('storeId', ParseBigIntPipe) storeId: bigint,
+    @Query('product', ParseBigIntPipe) productId: bigint,
+    @Query('store', ParseBigIntPipe) storeId: bigint,
   ) {
     return this.stockService.findOne(productId, storeId);
   }

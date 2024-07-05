@@ -35,4 +35,31 @@ describe('EntityNotFoundFilter', () => {
       statusCode: 404,
     });
   });
+
+  it('should catch an EntityNotFoundError and includes `relations` in the query', () => {
+    const filter = new EntityNotFoundFilter();
+    const exception = new EntityNotFoundError(Fixture, {
+      where: { productId: 1n, storeId: 1n },
+      relations: ['product', 'store'],
+    });
+    const status = jest.fn().mockReturnThis();
+    const json = jest.fn();
+    const host = {
+      switchToHttp: () => ({
+        getResponse: () => ({
+          status,
+          json,
+        }),
+      }),
+    };
+
+    filter.catch(exception, host as ArgumentsHost);
+
+    expect(host.switchToHttp().getResponse().status).toHaveBeenCalledWith(404);
+    expect(host.switchToHttp().getResponse().json).toHaveBeenCalledWith({
+      error: 'Not Found',
+      message: 'Fixture with productId = 1, storeId = 1 not found',
+      statusCode: 404,
+    });
+  });
 });

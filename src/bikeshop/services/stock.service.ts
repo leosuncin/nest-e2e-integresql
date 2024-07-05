@@ -33,6 +33,9 @@ export class StockService {
   }
 
   findOne(productId: bigint, storeId: bigint) {
-    return this.stockRepository.findOneByOrFail({ productId, storeId });
+    return this.stockRepository.findOneOrFail({
+      where: { productId, storeId },
+      relations: ['product', 'store'],
+    });
   }
 }

@@ -20,7 +20,7 @@ describe('StockService', () => {
               create: jest.fn(),
               save: jest.fn(),
               find: jest.fn(),
-              findOneByOrFail: jest.fn(),
+              findOneOrFail: jest.fn(),
             };
           },
         },
@@ -135,13 +135,13 @@ describe('StockService', () => {
       quantity: 100,
     };
 
-    mockedRepository.findOneByOrFail.mockResolvedValueOnce(stock);
+    mockedRepository.findOneOrFail.mockResolvedValueOnce(stock);
 
     await expect(service.findOne(1n, 1n)).resolves.toStrictEqual(stock);
   });
 
   it('should throw an error when stock is not found', async () => {
-    mockedRepository.findOneByOrFail.mockRejectedValue(
+    mockedRepository.findOneOrFail.mockRejectedValue(
       new EntityNotFoundError(Stock, { id: 404n }),
     );
 
