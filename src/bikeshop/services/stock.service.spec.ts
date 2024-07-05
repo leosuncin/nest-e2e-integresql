@@ -19,6 +19,7 @@ describe('StockService', () => {
             return {
               create: jest.fn(),
               save: jest.fn(),
+              find: jest.fn(),
             };
           },
         },
@@ -48,5 +49,23 @@ describe('StockService', () => {
     mockedRepository.save.mockResolvedValue(createdStock);
 
     await expect(service.create(newStock)).resolves.toStrictEqual(createdStock);
+  });
+
+  it('should find all the stocks', async () => {
+    const stocks: Stock[] = [
+      {
+        // @ts-expect-error foreign key
+        product: '1',
+        productId: 1n,
+        // @ts-expect-error foreign key
+        store: '1',
+        storeId: 1n,
+        quantity: 100,
+      },
+    ];
+
+    mockedRepository.find.mockResolvedValue(stocks);
+
+    await expect(service.findAll()).resolves.toStrictEqual(stocks);
   });
 });

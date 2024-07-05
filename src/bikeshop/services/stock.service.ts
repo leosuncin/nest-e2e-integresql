@@ -17,4 +17,8 @@ export class StockService {
 
     return this.stockRepository.save(stock);
   }
+
+  findAll() {
+    return this.stockRepository.find();
+  }
 }

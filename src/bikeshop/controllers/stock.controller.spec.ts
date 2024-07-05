@@ -17,6 +17,7 @@ describe('StockController', () => {
           provide: StockService,
           useValue: {
             create: jest.fn(),
+            findAll: jest.fn(),
           },
         },
       ],
@@ -45,5 +46,23 @@ describe('StockController', () => {
     await expect(controller.create(newStock)).resolves.toStrictEqual(
       createdStock,
     );
+  });
+
+  it('should find all stocks', async () => {
+    const stocks: Stock[] = [
+      {
+        // @ts-expect-error foreign key
+        product: '1',
+        productId: 1n,
+        // @ts-expect-error foreign key
+        store: '1',
+        storeId: 1n,
+        quantity: 100,
+      },
+    ];
+
+    mockedService.findAll.mockResolvedValue(stocks);
+
+    await expect(controller.findAll()).resolves.toStrictEqual(stocks);
   });
 });
