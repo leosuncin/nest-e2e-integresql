@@ -7,6 +7,7 @@ import { CreateBrandsTable } from '~bikeshop/1718954984063-create-brands-table';
 import { CreateCategoriesTable } from '~bikeshop/1719002522747-create-categories-table';
 import { CreateProductsTable } from '~bikeshop/1719220180803-create-products-table';
 import { CreateCustomersTable } from '~bikeshop/1719509356809-create-customers-table';
+import { CreateStoresTable } from '~bikeshop/1720142160331-create-stores-table';
 import { Brand } from '~bikeshop/brand.entity';
 import { brandFactory } from '~bikeshop/brand.factory';
 import { BrandSeeder } from '~bikeshop/brand.seeder';
@@ -33,6 +34,7 @@ export const options = {
     CreateCategoriesTable,
     CreateProductsTable,
     CreateCustomersTable,
+    CreateStoresTable,
   ],
   factories: [brandFactory, categoryFactory, productFactory, customerFactory],
   seeds: [BrandSeeder, CategorySeeder, ProductSeeder, CustomerSeeder],
