@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -44,5 +45,11 @@ export class StoreController {
     @Body(ValidationPipe) storeChanges: UpdateStore,
   ) {
     return this.storeService.update(store, storeChanges);
+  }
+
+  @Delete(':id')
+  @UseFilters(EntityNotFoundFilter)
+  remove(@Param('id', ParseBigIntPipe, CastStorePipe) store: Store) {
+    return this.storeService.remove(store);
   }
 }

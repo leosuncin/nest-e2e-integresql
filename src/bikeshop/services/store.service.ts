@@ -32,4 +32,8 @@ export class StoreService {
 
     return this.storeRepository.save(store);
   }
+
+  remove(store: Store) {
+    return this.storeRepository.remove(store);
+  }
 }

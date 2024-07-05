@@ -21,6 +21,7 @@ describe('StoreController', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             update: jest.fn(),
+            remove: jest.fn(),
           },
         },
       ],
@@ -110,5 +111,22 @@ describe('StoreController', () => {
     await expect(controller.update(store, storeChanges)).resolves.toStrictEqual(
       updatedStore,
     );
+  });
+
+  it('should remove a store', async () => {
+    const store: Store = {
+      id: 1n,
+      name: 'Reichert, Daugherty and Kreiger Bikes',
+      email: 'reichert.daugherty.kreiger@bike.shop',
+      phone: '+595 528-0109',
+      street: '4812 Bobby Lodge',
+      city: 'Joannieberg',
+      state: 'Wisconsin',
+      zipCode: '99053',
+    };
+
+    mockedService.remove.mockResolvedValue(store);
+
+    await expect(controller.remove(store)).resolves.toStrictEqual(store);
   });
 });
