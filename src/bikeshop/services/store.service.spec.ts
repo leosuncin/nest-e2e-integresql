@@ -5,6 +5,7 @@ import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateStore } from '~bikeshop/create-store.dto';
 import { Store } from '~bikeshop/store.entity';
 import { StoreService } from '~bikeshop/store.service';
+import { UpdateStore } from '~bikeshop/update-store.dto';
 
 describe('StoreService', () => {
   let service: StoreService;
@@ -21,6 +22,7 @@ describe('StoreService', () => {
               save: jest.fn(),
               find: jest.fn(),
               findOneByOrFail: jest.fn(),
+              merge: Object.assign,
             };
           },
         },
@@ -96,5 +98,28 @@ describe('StoreService', () => {
     );
 
     await expect(service.findOne(404n)).rejects.toThrow();
+  });
+
+  it('should update a store', async () => {
+    const storeChanges: UpdateStore = {
+      email: 'kiara_katelynn92@gmail.com',
+    };
+    const store: Store = {
+      id: 1n,
+      name: 'Reichert, Daugherty and Kreiger Bikes',
+      email: 'reichert.daugherty.kreiger@bike.shop',
+      phone: '+595 528-0109',
+      street: '4812 Bobby Lodge',
+      city: 'Joannieberg',
+      state: 'Wisconsin',
+      zipCode: '99053',
+    };
+    const updatedStore: Store = { ...store, ...storeChanges };
+
+    mockedRepository.save.mockResolvedValue(updatedStore);
+
+    await expect(service.update(store, storeChanges)).resolves.toStrictEqual(
+      updatedStore,
+    );
   });
 });

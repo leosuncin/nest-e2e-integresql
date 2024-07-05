@@ -4,6 +4,7 @@ import { CreateStore } from '~bikeshop/create-store.dto';
 import { StoreController } from '~bikeshop/store.controller';
 import { Store } from '~bikeshop/store.entity';
 import { StoreService } from '~bikeshop/store.service';
+import { UpdateStore } from '~bikeshop/update-store.dto';
 
 describe('StoreController', () => {
   let controller: StoreController;
@@ -19,6 +20,7 @@ describe('StoreController', () => {
             create: jest.fn(),
             findAll: jest.fn(),
             findOne: jest.fn(),
+            update: jest.fn(),
           },
         },
       ],
@@ -85,5 +87,28 @@ describe('StoreController', () => {
     mockedService.findOne.mockResolvedValue(store);
 
     await expect(controller.findOne(1n)).resolves.toStrictEqual(store);
+  });
+
+  it('should update a store', async () => {
+    const storeChanges: UpdateStore = {
+      email: 'kiara_katelynn92@gmail.com',
+    };
+    const store: Store = {
+      id: 1n,
+      name: 'Reichert, Daugherty and Kreiger Bikes',
+      email: 'reichert.daugherty.kreiger@bike.shop',
+      phone: '+595 528-0109',
+      street: '4812 Bobby Lodge',
+      city: 'Joannieberg',
+      state: 'Wisconsin',
+      zipCode: '99053',
+    };
+    const updatedStore: Store = { ...store, ...storeChanges };
+
+    mockedService.update.mockResolvedValue(updatedStore);
+
+    await expect(controller.update(store, storeChanges)).resolves.toStrictEqual(
+      updatedStore,
+    );
   });
 });
