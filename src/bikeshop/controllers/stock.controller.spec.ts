@@ -18,6 +18,7 @@ describe('StockController', () => {
           useValue: {
             create: jest.fn(),
             findAll: jest.fn(),
+            findOne: jest.fn(),
           },
         },
       ],
@@ -64,5 +65,39 @@ describe('StockController', () => {
     mockedService.findAll.mockResolvedValue(stocks);
 
     await expect(controller.findAll()).resolves.toStrictEqual(stocks);
+  });
+
+  it('should find a stock by id', async () => {
+    const stock: Stock = {
+      product: {
+        id: 1n,
+        name: 'Product',
+        modelYear: 2024,
+        listPrice: 99.99,
+        // @ts-expect-error foreign key
+        brand: 1n,
+        brandId: 1n,
+        // @ts-expect-error foreign key
+        category: 1n,
+        categoryId: 1n,
+      },
+      productId: 1n,
+      store: {
+        id: 1n,
+        name: 'Reichert, Daugherty and Kreiger Bikes',
+        email: 'reichert.daugherty.kreiger@bike.shop',
+        phone: '+595 528-0109',
+        street: '4812 Bobby Lodge',
+        city: 'Joannieberg',
+        state: 'Wisconsin',
+        zipCode: '99053',
+      },
+      storeId: 1n,
+      quantity: 100,
+    };
+
+    mockedService.findOne.mockResolvedValue(stock);
+
+    await expect(controller.findOne(1n, 1n)).resolves.toStrictEqual(stock);
   });
 });

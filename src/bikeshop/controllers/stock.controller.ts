@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseFilters,
+  ValidationPipe,
+} from '@nestjs/common';
 
 import { CreateStock } from '~bikeshop/create-stock.dto';
 import { StockService } from '~bikeshop/stock.service';
+import { EntityNotFoundFilter } from '~common/entity-not-found.filter';
+import { ParseBigIntPipe } from '~common/parse-big-int.pipe';
 
 @Controller('stocks')
 export class StockController {
@@ -15,5 +25,14 @@ export class StockController {
   @Get()
   findAll() {
     return this.stockService.findAll();
+  }
+
+  @Get(':productId&:storeId')
+  @UseFilters(EntityNotFoundFilter)
+  async findOne(
+    @Param('productId', ParseBigIntPipe) productId: bigint,
+    @Param('storeId', ParseBigIntPipe) storeId: bigint,
+  ) {
+    return this.stockService.findOne(productId, storeId);
   }
 }

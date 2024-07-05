@@ -21,4 +21,8 @@ export class StockService {
   findAll() {
     return this.stockRepository.find();
   }
+
+  findOne(productId: bigint, storeId: bigint) {
+    return this.stockRepository.findOneByOrFail({ productId, storeId });
+  }
 }

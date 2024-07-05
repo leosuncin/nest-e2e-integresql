@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
 
 import { CreateStock } from '~bikeshop/create-stock.dto';
 import { Stock } from '~bikeshop/stock.entity';
@@ -20,6 +20,7 @@ describe('StockService', () => {
               create: jest.fn(),
               save: jest.fn(),
               find: jest.fn(),
+              findOneByOrFail: jest.fn(),
             };
           },
         },
@@ -67,5 +68,47 @@ describe('StockService', () => {
     mockedRepository.find.mockResolvedValue(stocks);
 
     await expect(service.findAll()).resolves.toStrictEqual(stocks);
+  });
+
+  it('should find a stock by id', async () => {
+    const stock: Stock = {
+      product: {
+        id: 1n,
+        name: 'Product',
+        modelYear: 2024,
+        listPrice: 99.99,
+        // @ts-expect-error foreign key
+        brand: 1n,
+        brandId: 1n,
+        // @ts-expect-error foreign key
+        category: 1n,
+        categoryId: 1n,
+      },
+      productId: 1n,
+      store: {
+        id: 1n,
+        name: 'Reichert, Daugherty and Kreiger Bikes',
+        email: 'reichert.daugherty.kreiger@bike.shop',
+        phone: '+595 528-0109',
+        street: '4812 Bobby Lodge',
+        city: 'Joannieberg',
+        state: 'Wisconsin',
+        zipCode: '99053',
+      },
+      storeId: 1n,
+      quantity: 100,
+    };
+
+    mockedRepository.findOneByOrFail.mockResolvedValueOnce(stock);
+
+    await expect(service.findOne(1n, 1n)).resolves.toStrictEqual(stock);
+  });
+
+  it('should throw an error when stock is not found', async () => {
+    mockedRepository.findOneByOrFail.mockRejectedValue(
+      new EntityNotFoundError(Stock, { id: 404n }),
+    );
+
+    await expect(service.findOne(404n, 404n)).rejects.toThrow();
   });
 });
