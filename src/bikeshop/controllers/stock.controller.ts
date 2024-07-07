@@ -11,6 +11,7 @@ import {
 
 import { CreateStock } from '~bikeshop/create-stock.dto';
 import { StockService } from '~bikeshop/stock.service';
+import { EntityDuplicatedFilter } from '~common/entity-duplicated.filter';
 import { EntityNotFoundFilter } from '~common/entity-not-found.filter';
 import { ParseBigIntPipe } from '~common/parse-big-int.pipe';
 
@@ -18,7 +19,8 @@ import { ParseBigIntPipe } from '~common/parse-big-int.pipe';
 export class StockController {
   constructor(private readonly stockService: StockService) {}
 
-  @Post('stocks')
+  @Post('stock')
+  @UseFilters(EntityDuplicatedFilter)
   create(@Body(ValidationPipe) newStock: CreateStock) {
     return this.stockService.create(newStock);
   }

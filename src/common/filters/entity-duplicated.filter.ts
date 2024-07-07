@@ -20,10 +20,24 @@ export class EntityDuplicatedFilter
       const { property, value } =
         this.#constraintDuplicated.exec(exception.driverError.detail)?.groups ??
         {};
+      const props = property!.split(', ');
+      const values = value!.split(', ');
+      let template = '';
+
+      for (const index in props) {
+        template += `${props[index]} ${values[index]}`;
+
+        if (+index < props.length - 2) {
+          template += ', ';
+        }
+        if (+index < props.length - 1) {
+          template += ' and ';
+        }
+      }
 
       return response.status(HttpStatus.CONFLICT).json({
         error: 'Conflict',
-        message: `The ${property} ${value} already exists`,
+        message: `The ${template} already exists`,
         statusCode: HttpStatus.CONFLICT,
       });
     }
