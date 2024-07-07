@@ -4,6 +4,7 @@ import { CreateStock } from '~bikeshop/create-stock.dto';
 import { StockController } from '~bikeshop/stock.controller';
 import { Stock } from '~bikeshop/stock.entity';
 import { StockService } from '~bikeshop/stock.service';
+import { UpdateStock } from '~bikeshop/update-stock.dto';
 
 describe('StockController', () => {
   let controller: StockController;
@@ -20,6 +21,7 @@ describe('StockController', () => {
             findAllByProduct: jest.fn(),
             findAllByStore: jest.fn(),
             findOne: jest.fn(),
+            update: jest.fn(),
           },
         },
       ],
@@ -138,5 +140,27 @@ describe('StockController', () => {
     mockedService.findOne.mockResolvedValue(stock);
 
     await expect(controller.findOne(1n, 1n)).resolves.toStrictEqual(stock);
+  });
+
+  it('should update a stock', async () => {
+    const stock: Stock = {
+      // @ts-expect-error foreign key
+      product: '1',
+      productId: 1n,
+      // @ts-expect-error foreign key
+      store: '1',
+      storeId: 1n,
+      quantity: 100,
+    };
+    const changeStock: UpdateStock = {
+      quantity: 50,
+    };
+    const updatedStock: Stock = { ...stock, ...changeStock };
+
+    mockedService.update.mockResolvedValue(updatedStock);
+
+    await expect(controller.update(1n, 1n, changeStock)).resolves.toStrictEqual(
+      updatedStock,
+    );
   });
 });

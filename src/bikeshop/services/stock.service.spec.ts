@@ -5,6 +5,7 @@ import { EntityNotFoundError, Repository } from 'typeorm';
 import { CreateStock } from '~bikeshop/create-stock.dto';
 import { Stock } from '~bikeshop/stock.entity';
 import { StockService } from '~bikeshop/stock.service';
+import { UpdateStock } from '~bikeshop/update-stock.dto';
 
 describe('StockService', () => {
   let service: StockService;
@@ -21,6 +22,7 @@ describe('StockService', () => {
               save: jest.fn(),
               find: jest.fn(),
               findOneOrFail: jest.fn(),
+              merge: Object.assign,
             };
           },
         },
@@ -80,7 +82,7 @@ describe('StockService', () => {
     await expect(service.findAllByProduct(1n)).resolves.toStrictEqual(stocks);
   });
 
-  it('should find all the stock of a store', async () => {
+  it('should find all the stock of a stock', async () => {
     const stocks: Stock[] = [
       {
         // @ts-expect-error foreign key
@@ -146,5 +148,28 @@ describe('StockService', () => {
     );
 
     await expect(service.findOne(404n, 404n)).rejects.toThrow();
+  });
+
+  it('should update a stock', async () => {
+    const stockChanges: UpdateStock = {
+      quantity: 10,
+    };
+    const stock: Stock = {
+      // @ts-expect-error foreign key
+      product: '1',
+      productId: 1n,
+      // @ts-expect-error foreign key
+      store: '1',
+      storeId: 1n,
+      quantity: 100,
+    };
+    const updatedStock: Stock = { ...stock, ...stockChanges };
+
+    mockedRepository.findOneOrFail.mockResolvedValueOnce(stock);
+    mockedRepository.save.mockResolvedValue(updatedStock);
+
+    await expect(service.update(1n, 1n, stockChanges)).resolves.toStrictEqual(
+      updatedStock,
+    );
   });
 });

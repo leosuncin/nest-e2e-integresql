@@ -4,6 +4,7 @@ import type { Repository } from 'typeorm';
 
 import { CreateStock } from '~bikeshop/create-stock.dto';
 import { Stock } from '~bikeshop/stock.entity';
+import { UpdateStock } from '~bikeshop/update-stock.dto';
 
 @Injectable()
 export class StockService {
@@ -37,5 +38,13 @@ export class StockService {
       where: { productId, storeId },
       relations: ['product', 'store'],
     });
+  }
+
+  async update(productId: bigint, storeId: bigint, changeStock: UpdateStock) {
+    const stock = await this.findOne(productId, storeId);
+
+    this.stockRepository.merge(stock, changeStock);
+
+    return this.stockRepository.save(stock);
   }
 }
